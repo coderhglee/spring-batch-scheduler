@@ -56,6 +56,6 @@ public class AppScheduler {
         }
 
         log.info("Job finished with status : {}", execution.getStatus());
-        asyncService.findUser("hglee",runTime);
+        asyncService.findUser("coderhglee",runTime);
     }
 }

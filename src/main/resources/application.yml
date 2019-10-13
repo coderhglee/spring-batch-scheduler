@@ -1,0 +1,16 @@
+logging:
+  ROOT: DEBUG
+  com.hglee.batch : DEBUG INFO
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type : DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: DEBUG
+  pattern: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  path: logs/
+  file: batch.log
+
+
+spring:
+  batch:
+    job:
+      enabled: false
