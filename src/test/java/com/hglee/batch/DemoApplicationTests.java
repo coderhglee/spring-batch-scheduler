@@ -1,5 +1,10 @@
 package com.hglee.batch;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.hglee.batch.domain.News;
 import com.hglee.batch.service.AsyncService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +15,11 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -29,8 +38,27 @@ public class DemoApplicationTests {
 	@Autowired
 	AsyncService asyncService;
 
+	@Autowired
+	private RestTemplate restTemplate;
+
 	@Test
-	public void contextLoads() {
+	public void contextLoads() throws Exception{
+
+//		String url = String.format("https://api.github.com/users/%s", "coderhglee");
+		String url = String.format("https://chosun-robonews.dunamu.com/v2/news/json?limit=%s", "100");
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		System.out.println(response.toString());
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode root = objectMapper.readTree(response.getBody());
+
+		JsonNode news = root.path("res").path("channel").path("news");
+		ObjectReader objectReader = objectMapper.readerFor(new TypeReference<List<News>>() {});
+
+		List<News> newsList = objectReader.readValue(news);
+
+		System.out.println(newsList.size());
+
 	}
 
 	@Test
